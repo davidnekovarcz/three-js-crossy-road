@@ -187,39 +187,90 @@ function Player() {
     setPlayerRef(player.current);
   });
 
-  // Camera shake effect
-  useFrame(() => {
-    if (!player.current) return;
-    if (!playerState.shake) return;
-    const shakeDuration = 0.5; // seconds
-    const elapsed = (performance.now() - playerState.shakeStartTime) / 1000;
-    if (elapsed < shakeDuration) {
-      // Apply random shake to camera position
-      camera.position.x += (Math.random() - 0.5) * 10;
-      camera.position.y += (Math.random() - 0.5) * 10;
-      camera.position.z += (Math.random() - 0.5) * 5;
-    } else {
-      playerState.shake = false;
-      playerState.shakeStartTime = null;
-    }
-  });
-
   return (
     <Bounds fit clip observe margin={10}>
       <group ref={player}>
-        <group>
-          <mesh position={[0, 0, 10]} castShadow receiveShadow>
-            <boxGeometry args={[15, 15, 20]} />
-            <meshLambertMaterial color={0xffffff} flatShading />
-          </mesh>
-          <mesh position={[0, 0, 21]} castShadow receiveShadow>
-            <boxGeometry args={[2, 4, 2]} />
-            <meshLambertMaterial color={0xf0619a} flatShading />
-          </mesh>
-        </group>
+        <ChickenBody />
         <DirectionalLight ref={lightRef} />
       </group>
     </Bounds>
+  );
+}
+
+function ChickenBody() {
+  // UseFrame for squash/stretch effect
+  const group = useRef();
+  useFrame(() => {
+    if (!group.current) return;
+    const player = group.current;
+    const z = player.position.z;
+    const progress = Math.min(1, Math.abs(z) / 12);
+    const scaleY = 1 + 0.3 * progress;
+    const scaleX = 1 - 0.15 * progress;
+    const scaleZ = 1 - 0.15 * progress;
+    player.children[0].scale.set(scaleX, scaleZ, scaleY);
+  });
+  return (
+    <group ref={group}>
+      {/* Body: round, chicken-like */}
+      <mesh position={[0, 0, 13]} castShadow receiveShadow>
+        <sphereGeometry args={[8, 24, 24]} />
+        <meshLambertMaterial color={0xffffff} flatShading />
+      </mesh>
+      {/* Head: slightly smaller than body */}
+      <mesh position={[0, 0, 22.5]} castShadow receiveShadow>
+        <sphereGeometry args={[5.5, 24, 24]} />
+        <meshLambertMaterial color={0xffffff} flatShading />
+      </mesh>
+      {/* Beak */}
+      <mesh position={[0, 5.5, 25.5]} rotation-x={Math.PI / 2} castShadow receiveShadow>
+        <coneGeometry args={[1.2, 2.5, 12]} />
+        <meshLambertMaterial color={0xffc300} flatShading />
+      </mesh>
+      {/* Comb (red crest) */}
+      <mesh position={[0, 0.5, 28.5]} castShadow receiveShadow>
+        <sphereGeometry args={[0.9, 12, 12]} />
+        <meshLambertMaterial color={0xd7263d} flatShading />
+      </mesh>
+      <mesh position={[-0.9, 0.2, 28]} castShadow receiveShadow>
+        <sphereGeometry args={[0.6, 12, 12]} />
+        <meshLambertMaterial color={0xd7263d} flatShading />
+      </mesh>
+      <mesh position={[0.9, 0.2, 28]} castShadow receiveShadow>
+        <sphereGeometry args={[0.6, 12, 12]} />
+        <meshLambertMaterial color={0xd7263d} flatShading />
+      </mesh>
+      {/* Left Eye */}
+      <mesh position={[-1.7, 3.5, 26.5]} castShadow receiveShadow>
+        <sphereGeometry args={[0.6, 8, 8]} />
+        <meshLambertMaterial color={0x222222} />
+      </mesh>
+      {/* Right Eye */}
+      <mesh position={[1.7, 3.5, 26.5]} castShadow receiveShadow>
+        <sphereGeometry args={[0.6, 8, 8]} />
+        <meshLambertMaterial color={0x222222} />
+      </mesh>
+      {/* Left Wing */}
+      <mesh position={[-6.5, 0, 15]} rotation-z={-0.5} castShadow receiveShadow>
+        <sphereGeometry args={[2.2, 12, 12]} />
+        <meshLambertMaterial color={0xffffff} flatShading />
+      </mesh>
+      {/* Right Wing */}
+      <mesh position={[6.5, 0, 15]} rotation-z={0.5} castShadow receiveShadow>
+        <sphereGeometry args={[2.2, 12, 12]} />
+        <meshLambertMaterial color={0xffffff} flatShading />
+      </mesh>
+      {/* Left Foot */}
+      <mesh position={[-1.2, 0, 7]} rotation-x={Math.PI / 2} castShadow receiveShadow>
+        <cylinderGeometry args={[0.8, 0.8, 8, 12]} />
+        <meshLambertMaterial color={0xffa500} flatShading />
+      </mesh>
+      {/* Right Foot */}
+      <mesh position={[1.2, 0, 7]} rotation-x={Math.PI / 2} castShadow receiveShadow>
+        <cylinderGeometry args={[0.8, 0.8, 8, 12]} />
+        <meshLambertMaterial color={0xffa500} flatShading />
+      </mesh>
+    </group>
   );
 }
 
@@ -525,15 +576,14 @@ function setPosition(player, progress) {
   const startY = playerState.currentRow * tileSize;
   let endX = startX;
   let endY = startY;
-
   if (playerState.movesQueue[0] === "left") endX -= tileSize;
   if (playerState.movesQueue[0] === "right") endX += tileSize;
   if (playerState.movesQueue[0] === "forward") endY += tileSize;
   if (playerState.movesQueue[0] === "backward") endY -= tileSize;
-
   player.position.x = THREE.MathUtils.lerp(startX, endX, progress);
   player.position.y = THREE.MathUtils.lerp(startY, endY, progress);
-  player.children[0].position.z = Math.sin(progress * Math.PI) * 8;
+  // Exaggerate jump arc for rabbit effect
+  player.children[0].position.z = Math.sin(progress * Math.PI) * 12;
 }
 
 function setRotation(player, progress) {
