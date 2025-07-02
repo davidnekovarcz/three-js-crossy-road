@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { useGameStore } from '../store/gameStore';
-import { queueMove } from '../logic/playerLogic';
+import { useGameStore } from '@/store/gameStore';
+import { queueMove } from '@/logic/playerLogic';
 
 export function Score() {
   const score = useGameStore((state) => state.score);

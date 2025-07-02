@@ -1,9 +1,9 @@
 import React, { useRef, useEffect } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
 import { Bounds } from '@react-three/drei';
-import { setPlayerRef, playerState, stepCompleted } from '../logic/playerLogic';
-import { usePlayerAnimation } from '../animation/usePlayerAnimation';
-import { DirectionalLight } from './SceneHelpers';
+import { setPlayerRef, playerState, stepCompleted } from '@/logic/playerLogic';
+import { usePlayerAnimation } from '@/animation/usePlayerAnimation';
+import { DirectionalLight } from '@/components/SceneHelpers';
 import * as THREE from 'three';
 
 export default function Player() {

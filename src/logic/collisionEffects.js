@@ -1,10 +1,10 @@
-import { useGameStore } from '../store/gameStore';
-import { playerState } from './playerLogic';
+import { useGameStore } from '@/store/gameStore';
+import { playerState } from '@/logic/playerLogic';
 import { useFrame } from '@react-three/fiber';
-import { playHorn } from '../sound/playHorn';
-import { playGameOverSound } from '../sound/playGameOverSound';
+import { playHorn } from '@/sound/playHorn';
+import { playGameOverSound } from '@/sound/playGameOverSound';
 import { useRef } from 'react';
-import { boundingBoxesIntersect, isRowNear } from './collisionUtils';
+import { boundingBoxesIntersect, isRowNear } from '@/logic/collisionUtils';
 
 export function useHitDetection(vehicle, rowIndex) {
   const endGame = useGameStore((state) => state.endGame);

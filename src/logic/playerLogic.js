@@ -1,7 +1,7 @@
-import { useGameStore } from '../store/gameStore';
-import { useMapStore } from '../store/mapStore';
-import { minTileIndex, maxTileIndex, tileSize } from '../utils/constants';
-import { playCornSound } from '../sound/playCornSound';
+import { useGameStore } from '@/store/gameStore';
+import { useMapStore } from '@/store/mapStore';
+import { minTileIndex, maxTileIndex, tileSize } from '@/utils/constants';
+import { playCornSound } from '@/sound/playCornSound';
 
 export const playerState = {
   currentRow: 0,

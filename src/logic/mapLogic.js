@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { minTileIndex, maxTileIndex } from '../utils/constants';
+import { minTileIndex, maxTileIndex } from '@/utils/constants';
 
 export function generateRows(amount) {
   const rows = [];

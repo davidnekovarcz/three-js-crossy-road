@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { resetPlayerStore } from '../logic/playerLogic';
-import { useMapStore } from './mapStore';
+import { resetPlayerStore } from '@/logic/playerLogic';
+import { useMapStore } from '@/store/mapStore';
 
 export const useGameStore = create((set) => ({
   status: 'running',

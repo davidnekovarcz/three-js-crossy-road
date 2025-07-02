@@ -1,8 +1,8 @@
 import React from 'react';
 import { Canvas } from '@react-three/fiber';
-import Player from './Player';
-import Map from './Map';
-import { Score, Controls, Result, CornScore } from './UI';
+import Player from '@/components/Player';
+import Map from '@/components/Map';
+import { Score, Controls, Result, CornScore } from '@/components/UI';
 
 const Scene = ({ children }) => (
   <Canvas

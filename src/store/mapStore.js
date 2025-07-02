@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { generateRows } from '../logic/mapLogic';
+import { generateRows } from '@/logic/mapLogic';
 
 export const useMapStore = create((set) => ({
   rows: generateRows(20),

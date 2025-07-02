@@ -1,8 +1,8 @@
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { playerState, stepCompleted } from '../logic/playerLogic';
-import { tileSize } from '../utils/constants';
-import { useGameStore } from '../store/gameStore';
+import { playerState, stepCompleted } from '@/logic/playerLogic';
+import { tileSize } from '@/utils/constants';
+import { useGameStore } from '@/store/gameStore';
 
 export function usePlayerAnimation(ref) {
   const moveClock = new THREE.Clock(false);
