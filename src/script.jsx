@@ -36,6 +36,8 @@ function queueMove(direction) {
     playerState.movesQueue = [];
     return;
   }
+  // Only allow one move in the queue at a time
+  if (playerState.movesQueue.length > 0) return;
   const isValidMove = endsUpInValidPosition(
     { rowIndex: playerState.currentRow, tileIndex: playerState.currentTile },
     [...playerState.movesQueue, direction]
