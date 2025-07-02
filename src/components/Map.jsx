@@ -105,8 +105,10 @@ export function Grass({ rowIndex, children }) {
         <boxGeometry args={[tilesPerRow * tileSize, tileSize, 3]} />
         <meshLambertMaterial color={0x99c846} flatShading />
       </mesh>
-      <GridLines />
       {children}
+      <group position-z={2}>
+        <GridLines variant="grass" />
+      </group>
     </group>
   );
 }
@@ -126,8 +128,10 @@ export function Road({ rowIndex, children }) {
         <planeGeometry args={[tilesPerRow * tileSize, tileSize]} />
         <meshLambertMaterial color={0x393d49} flatShading />
       </mesh>
-      <GridLines />
       {children}
+      <group position-z={2}>
+        <GridLines variant="road" />
+      </group>
     </group>
   );
 }
@@ -229,7 +233,7 @@ export function Corn({ tileIndex, collected = false, start, rowIndex }) {
   });
   if (done) return null;
   return (
-    <group ref={ref} position={[tileIndex * tileSize, 0, 16]}>
+    <group ref={ref} position={[tileIndex * tileSize, 0, 6]}>
       {/* Corn cob (yellow) */}
       <mesh castShadow receiveShadow>
         <capsuleGeometry args={[2, 4, 8, 16]} />
@@ -252,26 +256,27 @@ export function Corn({ tileIndex, collected = false, start, rowIndex }) {
   );
 }
 
-export function GridLines() {
+export function GridLines({ variant = "grass" }) {
+  const opacity = variant === "road" ? 0.06 : 0.18;
   const lines = [];
   for (let i = minTileIndex; i <= maxTileIndex + 1; i++) {
     lines.push(
       <mesh key={`v-${i}`} position-x={i * tileSize - tileSize / 2}>
         <boxGeometry args={[0.5, tileSize, 2]} />
-        <meshBasicMaterial color={0xcccccc} transparent opacity={0.07} />
+        <meshBasicMaterial color={0xcccccc} transparent opacity={opacity} />
       </mesh>
     );
   }
   lines.push(
     <mesh key="h-top" position-y={tileSize / 2}>
       <boxGeometry args={[(tilesPerRow + 2) * tileSize, 0.5, 2]} />
-      <meshBasicMaterial color={0xcccccc} transparent opacity={0.04} />
+      <meshBasicMaterial color={0xcccccc} transparent opacity={opacity * 0.6} />
     </mesh>
   );
   lines.push(
     <mesh key="h-bottom" position-y={-tileSize / 2}>
       <boxGeometry args={[(tilesPerRow + 2) * tileSize, 0.5, 2]} />
-      <meshBasicMaterial color={0xcccccc} transparent opacity={0.04} />
+      <meshBasicMaterial color={0xcccccc} transparent opacity={opacity * 0.6} />
     </mesh>
   );
   return <group>{lines}</group>;
