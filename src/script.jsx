@@ -30,13 +30,15 @@ const playerState = {
 };
 
 function queueMove(direction) {
+  if (useGameStore.getState().status === "over") {
+    playerState.movesQueue = [];
+    return;
+  }
   const isValidMove = endsUpInValidPosition(
     { rowIndex: playerState.currentRow, tileIndex: playerState.currentTile },
     [...playerState.movesQueue, direction]
   );
-
   if (!isValidMove) return;
-
   playerState.movesQueue.push(direction);
 }
 
@@ -470,6 +472,10 @@ function usePlayerAnimation(ref) {
 
   useFrame(() => {
     if (!ref.current) return;
+    if (useGameStore.getState().status === "over") {
+      playerState.movesQueue = [];
+      return;
+    }
     if (!playerState.movesQueue.length) return;
     const player = ref.current;
 
