@@ -38,7 +38,22 @@ export function generateForesMetadata() {
     const height = randomElement([20, 45, 60]);
     return { tileIndex, height };
   });
-  return { type: 'forest', trees };
+  // Corn: randomly place on tree-free tiles
+  const treeTiles = new Set(trees.map(t => t.tileIndex));
+  const possibleCornTiles = [];
+  for (let i = minTileIndex; i <= maxTileIndex; i++) {
+    if (!treeTiles.has(i)) possibleCornTiles.push(i);
+  }
+  // Place 0-2 corn per row
+  const corn = [];
+  const cornCount = THREE.MathUtils.randInt(0, Math.min(2, possibleCornTiles.length));
+  for (let i = 0; i < cornCount; i++) {
+    if (possibleCornTiles.length === 0) break;
+    const idx = THREE.MathUtils.randInt(0, possibleCornTiles.length - 1);
+    corn.push(possibleCornTiles[idx]);
+    possibleCornTiles.splice(idx, 1);
+  }
+  return { type: 'forest', trees, corn };
 }
 
 export function generateCarLaneMetadata() {

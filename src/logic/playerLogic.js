@@ -31,10 +31,29 @@ export function stepCompleted() {
   if (direction === 'backward') playerState.currentRow -= 1;
   if (direction === 'left') playerState.currentTile -= 1;
   if (direction === 'right') playerState.currentTile += 1;
-  if (playerState.currentRow === useMapStore.getState().rows.length - 10) {
-    useMapStore.getState().addRows();
+
+  // Corn collection logic
+  const mapStore = useMapStore.getState();
+  const gameStore = useGameStore.getState();
+  const rowIdx = playerState.currentRow - 1;
+  const tileIdx = playerState.currentTile;
+  const rows = mapStore.rows;
+  if (rows[rowIdx] && rows[rowIdx].type === 'forest' && rows[rowIdx].corn) {
+    const cornIdx = rows[rowIdx].corn.indexOf(tileIdx);
+    if (cornIdx !== -1) {
+      // Mark corn as collected with timestamp
+      if (!rows[rowIdx].collectedCorn) rows[rowIdx].collectedCorn = [];
+      rows[rowIdx].collectedCorn.push({ tileIndex: tileIdx, start: performance.now() });
+      rows[rowIdx].corn.splice(cornIdx, 1);
+      useMapStore.setState({ rows: [...rows] });
+      useGameStore.getState().incrementCorn();
+    }
   }
-  useGameStore.getState().updateScore(playerState.currentRow);
+
+  if (playerState.currentRow === mapStore.rows.length - 10) {
+    mapStore.addRows();
+  }
+  gameStore.updateScore(playerState.currentRow);
 }
 
 export function setPlayerRef(ref) {

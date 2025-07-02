@@ -2,7 +2,7 @@ import React from 'react';
 import { Canvas } from '@react-three/fiber';
 import Player from './Player';
 import Map from './Map';
-import { Score, Controls, Result } from './UI';
+import { Score, Controls, Result, CornScore } from './UI';
 
 const Scene = ({ children }) => (
   <Canvas
@@ -26,6 +26,7 @@ export default function Game() {
         <Map />
       </Scene>
       <Score />
+      <CornScore />
       <Controls />
       <Result />
     </div>

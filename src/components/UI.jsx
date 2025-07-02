@@ -37,6 +37,19 @@ export function Result() {
   );
 }
 
+export function CornScore() {
+  const cornCount = useGameStore((state) => state.cornCount);
+  // Show up to 20 corns, then show + if more
+  const maxCorns = 20;
+  let corns = '';
+  if (cornCount <= maxCorns) {
+    corns = '🌽'.repeat(cornCount);
+  } else {
+    corns = '🌽'.repeat(maxCorns) + ` +${cornCount - maxCorns}`;
+  }
+  return <div id="corn-score" style={{position: 'absolute', top: 20, right: 20, fontSize: '2em', color: 'gold', zIndex: 10, whiteSpace: 'nowrap'}}>{corns}</div>;
+}
+
 export function useEventListeners() {
   useEffect(() => {
     const handleKeyDown = (event) => {
