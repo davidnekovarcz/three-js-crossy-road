@@ -4,6 +4,7 @@ import { Bounds } from '@react-three/drei';
 import { setPlayerRef, playerState, stepCompleted } from '../logic/playerLogic';
 import { usePlayerAnimation } from '../logic/playerAnimation';
 import { DirectionalLight } from './SceneHelpers';
+import * as THREE from 'three';
 
 export default function Player() {
   const player = useRef(null);
@@ -11,6 +12,24 @@ export default function Player() {
   const camera = useThree((state) => state.camera);
 
   usePlayerAnimation(player);
+
+  // Camera shake effect (runs always, even if paused)
+  useFrame(() => {
+    if (!player.current) return;
+    if (!camera) return;
+    if (playerState.shake) {
+      // Shake: random offset, decaying over 600ms
+      const elapsed = performance.now() - (playerState.shakeStartTime || 0);
+      const duration = 600;
+      const intensity = 8 * (1 - Math.min(1, elapsed / duration));
+      camera.position.x = 300 + (Math.random() - 0.5) * intensity;
+      camera.position.y = -300 + (Math.random() - 0.5) * intensity;
+      camera.position.z = 300 + (Math.random() - 0.5) * intensity * 0.5;
+    } else {
+      // Reset camera position
+      camera.position.set(300, -300, 300);
+    }
+  });
 
   useEffect(() => {
     if (!player.current) return;
@@ -35,12 +54,38 @@ export function ChickenBody() {
   useFrame(() => {
     if (!group.current) return;
     const player = group.current;
+    // Animate squash/stretch
     const z = player.position.z;
     const progress = Math.min(1, Math.abs(z) / 12);
     const scaleY = 1 + 0.3 * progress;
     const scaleX = 1 - 0.15 * progress;
     const scaleZ = 1 - 0.15 * progress;
     player.children[0].scale.set(scaleX, scaleZ, scaleY);
+
+    // Animate opacity on respawn
+    if (playerState.respawning) {
+      const duration = 500; // ms
+      const elapsed = performance.now() - (playerState.respawnStartTime || 0);
+      const opacity = Math.min(1, elapsed / duration);
+      // Set opacity for all meshes in the group
+      player.traverse((obj) => {
+        if (obj.material) {
+          obj.material.transparent = true;
+          obj.material.opacity = opacity;
+        }
+      });
+      if (opacity >= 1) {
+        playerState.respawning = false;
+      }
+    } else {
+      // Ensure fully visible if not respawning
+      player.traverse((obj) => {
+        if (obj.material) {
+          obj.material.transparent = false;
+          obj.material.opacity = 1;
+        }
+      });
+    }
   });
   return (
     <group ref={group}>

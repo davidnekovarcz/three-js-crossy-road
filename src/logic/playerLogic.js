@@ -8,7 +8,9 @@ export const playerState = {
   movesQueue: [],
   ref: null,
   shake: false,
-  shakeStartTime: null
+  shakeStartTime: null,
+  respawning: false,
+  respawnStartTime: null
 };
 
 export function queueMove(direction) {
@@ -47,6 +49,7 @@ export function stepCompleted() {
       rows[rowIdx].corn.splice(cornIdx, 1);
       useMapStore.setState({ rows: [...rows] });
       useGameStore.getState().incrementCorn();
+      useGameStore.getState().setCheckpoint(playerState.currentRow, playerState.currentTile);
     }
   }
 
@@ -66,6 +69,8 @@ export function resetPlayerStore() {
   playerState.movesQueue = [];
   playerState.shake = false;
   playerState.shakeStartTime = null;
+  playerState.respawning = false;
+  playerState.respawnStartTime = null;
   if (!playerState.ref) return;
   playerState.ref.position.x = 0;
   playerState.ref.position.y = 0;

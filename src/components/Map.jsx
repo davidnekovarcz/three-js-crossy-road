@@ -208,19 +208,23 @@ export function Wheel({ x }) {
 export function Corn({ tileIndex, collected = false, start, rowIndex }) {
   const ref = useRef();
   const [done, setDone] = useState(false);
-  // Animation: pulsate and grow if collected
+  const doneRef = useRef(false);
   useFrame(() => {
-    if (!collected || !ref.current) return;
+    if (!collected || !ref.current || doneRef.current) return;
     const duration = 0.6;
     const elapsed = (performance.now() - start) / 1000;
     if (elapsed >= duration) {
-      setDone(true);
+      if (!doneRef.current) {
+        doneRef.current = true;
+        setDone(prev => {
+          if (!prev) return true;
+          return prev;
+        });
+      }
       return;
     }
-    // Pulsate and grow
     const scale = 1 + 2 * Math.sin((elapsed / duration) * Math.PI);
     ref.current.scale.set(scale, scale, scale);
-    // Keep it above the chicken
     ref.current.position.z = 30 + 10 * Math.sin((elapsed / duration) * Math.PI);
   });
   if (done) return null;

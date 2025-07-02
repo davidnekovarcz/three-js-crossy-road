@@ -2,11 +2,14 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { playerState, stepCompleted } from './playerLogic';
 import { tileSize } from '../utils/constants';
+import { useGameStore } from '../store/gameStore';
 
 export function usePlayerAnimation(ref) {
   const moveClock = new THREE.Clock(false);
+  const isPaused = useGameStore((state) => state.isPaused);
   useFrame(() => {
     if (!ref.current) return;
+    if (isPaused || playerState.shake || playerState.respawning) return;
     if (window.useGameStore && window.useGameStore.getState().status === 'over') {
       playerState.movesQueue = [];
       return;

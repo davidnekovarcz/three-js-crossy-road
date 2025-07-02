@@ -1,9 +1,12 @@
 import { useFrame } from '@react-three/fiber';
 import { minTileIndex, maxTileIndex, tileSize } from '../utils/constants';
+import { useGameStore } from '../store/gameStore';
 
 export function useVehicleAnimation(ref, direction, speed) {
+  const isPaused = useGameStore((state) => state.isPaused);
   useFrame((state, delta) => {
     if (!ref.current) return;
+    if (isPaused) return;
     const vehicle = ref.current;
     const beginningOfRow = (minTileIndex - 2) * tileSize;
     const endOfRow = (maxTileIndex + 2) * tileSize;
