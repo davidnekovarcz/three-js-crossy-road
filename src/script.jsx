@@ -274,6 +274,11 @@ function Row({ rowIndex, rowData }) {
     case "truck": {
       return <TruckLane rowIndex={rowIndex} rowData={rowData} />;
     }
+    case "grass": {
+      return <Grass rowIndex={rowIndex} />;
+    }
+    default:
+      return null;
   }
 }
 
@@ -602,8 +607,14 @@ function endsUpInValidPosition(currentPosition, moves) {
 function generateRows(amount) {
   const rows = [];
   for (let i = 0; i < amount; i++) {
-    const rowData = generateRow();
-    rows.push(rowData);
+    if (i === 0) {
+      rows.push({ type: "grass" });
+    } else if (i === 1) {
+      rows.push(generateForesMetadata());
+    } else {
+      const rowData = generateRow();
+      rows.push(rowData);
+    }
   }
   return rows;
 }
