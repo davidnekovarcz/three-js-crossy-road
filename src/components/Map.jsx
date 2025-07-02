@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useMapStore } from '../store/mapStore';
-import { useVehicleAnimation } from '../logic/vehicleAnimation';
-import { useHitDetection } from '../logic/collision';
+import { useVehicleAnimation } from '../animation/useVehicleAnimation';
+import { useHitDetection } from '../logic/collisionEffects';
 import { tilesPerRow, tileSize, minTileIndex, maxTileIndex } from '../utils/constants';
 import { useFrame } from '@react-three/fiber';
 import { useGameStore } from '../store/gameStore';

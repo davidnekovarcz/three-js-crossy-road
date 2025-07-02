@@ -1,7 +1,7 @@
 import { useGameStore } from '../store/gameStore';
 import { useMapStore } from '../store/mapStore';
 import { minTileIndex, maxTileIndex, tileSize } from '../utils/constants';
-import { playCornSound } from '../utils/playCornSound';
+import { playCornSound } from '../sound/playCornSound';
 
 export const playerState = {
   currentRow: 0,
@@ -11,7 +11,8 @@ export const playerState = {
   shake: false,
   shakeStartTime: null,
   respawning: false,
-  respawnStartTime: null
+  respawnStartTime: null,
+  respawnDuration: 1200
 };
 
 export function queueMove(direction) {
@@ -19,6 +20,7 @@ export function queueMove(direction) {
     playerState.movesQueue = [];
     return;
   }
+  if (playerState.respawning) return;
   if (playerState.movesQueue.length > 0) return;
   const isValidMove = endsUpInValidPosition(
     { rowIndex: playerState.currentRow, tileIndex: playerState.currentTile },
@@ -73,6 +75,7 @@ export function resetPlayerStore() {
   playerState.shakeStartTime = null;
   playerState.respawning = false;
   playerState.respawnStartTime = null;
+  playerState.respawnDuration = 1200;
   if (!playerState.ref) return;
   playerState.ref.position.x = 0;
   playerState.ref.position.y = 0;

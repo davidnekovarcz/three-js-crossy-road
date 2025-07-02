@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
 import { Bounds } from '@react-three/drei';
 import { setPlayerRef, playerState, stepCompleted } from '../logic/playerLogic';
-import { usePlayerAnimation } from '../logic/playerAnimation';
+import { usePlayerAnimation } from '../animation/usePlayerAnimation';
 import { DirectionalLight } from './SceneHelpers';
 import * as THREE from 'three';
 
@@ -62,29 +62,34 @@ export function ChickenBody() {
     const scaleZ = 1 - 0.15 * progress;
     player.children[0].scale.set(scaleX, scaleZ, scaleY);
 
-    // Animate opacity on respawn
+    // Animate opacity and grow-from-ground on respawn
     if (playerState.respawning) {
-      const duration = 500; // ms
+      const duration = playerState.respawnDuration || 1200; // ms
       const elapsed = performance.now() - (playerState.respawnStartTime || 0);
-      const opacity = Math.min(1, elapsed / duration);
-      // Set opacity for all meshes in the group
+      const t = Math.min(1, elapsed / duration);
+      const opacity = t;
+      const grow = 0.1 + 0.9 * t; // scale from 0.1 to 1
+      // Set opacity and scale for all meshes in the group
       player.traverse((obj) => {
         if (obj.material) {
           obj.material.transparent = true;
           obj.material.opacity = opacity;
         }
       });
+      player.scale.set(grow, grow, grow);
       if (opacity >= 1) {
         playerState.respawning = false;
+        player.scale.set(1, 1, 1);
       }
     } else {
-      // Ensure fully visible if not respawning
+      // Ensure fully visible and normal scale if not respawning
       player.traverse((obj) => {
         if (obj.material) {
           obj.material.transparent = false;
           obj.material.opacity = 1;
         }
       });
+      player.scale.set(1, 1, 1);
     }
   });
   return (
