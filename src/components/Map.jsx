@@ -4,6 +4,7 @@ import { useVehicleAnimation } from '../logic/vehicleAnimation';
 import { useHitDetection } from '../logic/collision';
 import { tilesPerRow, tileSize, minTileIndex, maxTileIndex } from '../utils/constants';
 import { useFrame } from '@react-three/fiber';
+import { useGameStore } from '../store/gameStore';
 
 export default function Map() {
   const rows = useMapStore((state) => state.rows);

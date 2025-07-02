@@ -1,6 +1,7 @@
 import { useGameStore } from '../store/gameStore';
 import { useMapStore } from '../store/mapStore';
 import { minTileIndex, maxTileIndex, tileSize } from '../utils/constants';
+import { playCornSound } from '../utils/playCornSound';
 
 export const playerState = {
   currentRow: 0,
@@ -48,6 +49,7 @@ export function stepCompleted() {
       rows[rowIdx].collectedCorn.push({ tileIndex: tileIdx, start: performance.now() });
       rows[rowIdx].corn.splice(cornIdx, 1);
       useMapStore.setState({ rows: [...rows] });
+      playCornSound();
       useGameStore.getState().incrementCorn();
       useGameStore.getState().setCheckpoint(playerState.currentRow, playerState.currentTile);
     }
