@@ -26,7 +26,9 @@ const playerState = {
   currentRow: 0,
   currentTile: 0,
   movesQueue: [],
-  ref: null
+  ref: null,
+  shake: false,
+  shakeStartTime: null
 };
 
 function queueMove(direction) {
@@ -66,7 +68,8 @@ function resetPlayerStore() {
   playerState.currentRow = 0;
   playerState.currentTile = 0;
   playerState.movesQueue = [];
-
+  playerState.shake = false;
+  playerState.shakeStartTime = null;
   if (!playerState.ref) return;
   playerState.ref.position.x = 0;
   playerState.ref.position.y = 0;
@@ -177,13 +180,26 @@ function Player() {
   useEffect(() => {
     if (!player.current) return;
     if (!lightRef.current) return;
-
-    // Attach the camera to the player
     player.current.add(camera);
     lightRef.current.target = player.current;
-
-    // Set the player reference in the store
     setPlayerRef(player.current);
+  });
+
+  // Camera shake effect
+  useFrame(() => {
+    if (!player.current) return;
+    if (!playerState.shake) return;
+    const shakeDuration = 0.5; // seconds
+    const elapsed = (performance.now() - playerState.shakeStartTime) / 1000;
+    if (elapsed < shakeDuration) {
+      // Apply random shake to camera position
+      camera.position.x += (Math.random() - 0.5) * 10;
+      camera.position.y += (Math.random() - 0.5) * 10;
+      camera.position.z += (Math.random() - 0.5) * 5;
+    } else {
+      playerState.shake = false;
+      playerState.shakeStartTime = null;
+    }
   });
 
   return (
@@ -318,6 +334,7 @@ function Grass({ rowIndex, children }) {
         <boxGeometry args={[tilesPerRow * tileSize, tileSize, 3]} />
         <meshLambertMaterial color={0x99c846} flatShading />
       </mesh>
+      <GridLines />
       {children}
     </group>
   );
@@ -338,6 +355,7 @@ function Road({ rowIndex, children }) {
         <planeGeometry args={[tilesPerRow * tileSize, tileSize]} />
         <meshLambertMaterial color={0x393d49} flatShading />
       </mesh>
+      <GridLines />
       {children}
     </group>
   );
@@ -683,10 +701,42 @@ function useHitDetection(vehicle, rowIndex) {
       playerBoundingBox.setFromObject(playerState.ref);
 
       if (playerBoundingBox.intersectsBox(vehicleBoundingBox)) {
+        if (!playerState.shake) {
+          playerState.shake = true;
+          playerState.shakeStartTime = performance.now();
+        }
         endGame();
       }
     }
   });
+}
+
+// Subtle grid lines component
+function GridLines() {
+  const lines = [];
+  // Vertical lines
+  for (let i = minTileIndex; i <= maxTileIndex + 1; i++) {
+    lines.push(
+      <mesh key={`v-${i}`} position-x={i * tileSize - tileSize / 2}>
+        <boxGeometry args={[0.5, tileSize, 2]} />
+        <meshBasicMaterial color={0xcccccc} transparent opacity={0.07} />
+      </mesh>
+    );
+  }
+  // Horizontal line (top and bottom of the tile)
+  lines.push(
+    <mesh key="h-top" position-y={tileSize / 2}>
+      <boxGeometry args={[(tilesPerRow + 2) * tileSize, 0.5, 2]} />
+      <meshBasicMaterial color={0xcccccc} transparent opacity={0.04} />
+    </mesh>
+  );
+  lines.push(
+    <mesh key="h-bottom" position-y={-tileSize / 2}>
+      <boxGeometry args={[(tilesPerRow + 2) * tileSize, 0.5, 2]} />
+      <meshBasicMaterial color={0xcccccc} transparent opacity={0.04} />
+    </mesh>
+  );
+  return <group>{lines}</group>;
 }
 
 export default Game;
