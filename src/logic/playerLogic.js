@@ -50,7 +50,11 @@ export function stepCompleted() {
       if (!rows[rowIdx].collectedCorn) rows[rowIdx].collectedCorn = [];
       rows[rowIdx].collectedCorn.push({ tileIndex: tileIdx, start: performance.now() });
       rows[rowIdx].corn.splice(cornIdx, 1);
-      useMapStore.setState({ rows: [...rows] });
+      useMapStore.setState(state => {
+        const newRows = state.rows.slice();
+        newRows[rowIdx] = { ...rows[rowIdx] };
+        return { rows: newRows };
+      });
       playCornSound();
       useGameStore.getState().incrementCorn();
       useGameStore.getState().setCheckpoint(playerState.currentRow, playerState.currentTile);
