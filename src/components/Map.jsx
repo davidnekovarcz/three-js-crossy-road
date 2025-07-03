@@ -138,15 +138,28 @@ export function Road({ rowIndex, children }) {
 }
 
 export function Tree({ tileIndex, height }) {
+  // Foliage parameters
+  const foliageHeights = [height / 2 + 32, height / 2 + 48];
+  const foliageOffsets = [0, 6];
   return (
     <group position-x={tileIndex * tileSize}>
-      <mesh position-z={height / 2 + 20} castShadow receiveShadow>
-        <boxGeometry args={[30, 30, height]} />
-        <meshLambertMaterial color={0x7aa21d} flatShading />
+      {/* Trunk */}
+      <mesh position-z={height / 2} castShadow receiveShadow rotation-x={Math.PI / 2}>
+        <cylinderGeometry args={[4, 4, height, 8]} />
+        <meshLambertMaterial color={0x8d5524} flatShading />
       </mesh>
-      <mesh position-z={10} castShadow receiveShadow>
-        <boxGeometry args={[15, 15, 20]} />
-        <meshLambertMaterial color={0x4d2926} flatShading />
+      {/* Foliage: two or three stacked/offset spheres */}
+      <mesh position-z={height + 14} castShadow receiveShadow>
+        <sphereGeometry args={[18, 16, 16]} />
+        <meshLambertMaterial color={0x6cbf2c} flatShading />
+      </mesh>
+      <mesh position={[foliageOffsets[0], 0, height + 28]} castShadow receiveShadow>
+        <sphereGeometry args={[13, 16, 16]} />
+        <meshLambertMaterial color={0x5ea726} flatShading />
+      </mesh>
+      <mesh position={[-foliageOffsets[1], 0, height + 20]} castShadow receiveShadow>
+        <sphereGeometry args={[10, 16, 16]} />
+        <meshLambertMaterial color={0x4e8c1a} flatShading />
       </mesh>
     </group>
   );
