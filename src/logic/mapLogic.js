@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { minTileIndex, maxTileIndex } from '@/utils/constants';
+import { minTileIndex, maxTileIndex, tileSize } from '@/utils/constants';
 
 export function generateRows(amount) {
   const rows = [];
@@ -17,14 +17,23 @@ export function generateRows(amount) {
 }
 
 export function generateRow() {
-  const type = randomElement(['car', 'truck', 'forest']);
-  if (type === 'car') return generateCarLaneMetadata();
-  if (type === 'truck') return generateTruckLaneMetadata();
+  const type = randomElement(['log', 'animal', 'forest']);
+  if (type === 'log') return generateLogLaneMetadata();
+  if (type === 'animal') return generateAnimalLaneMetadata();
   return generateForesMetadata();
 }
 
 export function randomElement(array) {
   return array[Math.floor(Math.random() * array.length)];
+}
+
+function shuffled(array) {
+  // Fisher-Yates shuffle
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
 
 export function generateForesMetadata() {
@@ -56,40 +65,20 @@ export function generateForesMetadata() {
   return { type: 'forest', trees, corn };
 }
 
-export function generateCarLaneMetadata() {
+export function generateLogLaneMetadata() {
   const direction = randomElement([true, false]);
-  const speed = randomElement([125, 156, 188]);
-  const occupiedTiles = new Set();
-  const vehicles = Array.from({ length: 3 }, () => {
-    let initialTileIndex;
-    do {
-      initialTileIndex = THREE.MathUtils.randInt(minTileIndex, maxTileIndex);
-    } while (occupiedTiles.has(initialTileIndex));
-    occupiedTiles.add(initialTileIndex - 1);
-    occupiedTiles.add(initialTileIndex);
-    occupiedTiles.add(initialTileIndex + 1);
-    const color = randomElement([0xa52523, 0xbdb638, 0x78b14b]);
-    return { initialTileIndex, color };
-  });
-  return { type: 'car', direction, speed, vehicles };
+  const speed = randomElement([110, 140, 170]);
+  // For logs, just store N logs; position will be calculated in animation
+  const logs = Array.from({ length: 3 }, (_, i) => ({ index: i }));
+  return { type: 'log', direction, speed, logs };
 }
 
-export function generateTruckLaneMetadata() {
+export function generateAnimalLaneMetadata() {
   const direction = randomElement([true, false]);
-  const speed = randomElement([125, 156, 188]);
-  const occupiedTiles = new Set();
-  const vehicles = Array.from({ length: 2 }, () => {
-    let initialTileIndex;
-    do {
-      initialTileIndex = THREE.MathUtils.randInt(minTileIndex, maxTileIndex);
-    } while (occupiedTiles.has(initialTileIndex));
-    occupiedTiles.add(initialTileIndex - 2);
-    occupiedTiles.add(initialTileIndex - 1);
-    occupiedTiles.add(initialTileIndex);
-    occupiedTiles.add(initialTileIndex + 1);
-    occupiedTiles.add(initialTileIndex + 2);
-    const color = randomElement([0xa52523, 0xbdb638, 0x78b14b]);
-    return { initialTileIndex, color };
+  const speed = randomElement([120, 150, 180]);
+  const animals = Array.from({ length: 2 }, (_, i) => {
+    const species = randomElement(['boar', 'deer', 'bear']);
+    return { index: i, species };
   });
-  return { type: 'truck', direction, speed, vehicles };
+  return { type: 'animal', direction, speed, animals };
 } 

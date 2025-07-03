@@ -30,10 +30,10 @@ export function Row({ rowIndex, rowData }) {
   switch (rowData.type) {
     case 'forest':
       return <Forest rowIndex={rowIndex} rowData={rowData} />;
-    case 'car':
-      return <CarLane rowIndex={rowIndex} rowData={rowData} />;
-    case 'truck':
-      return <TruckLane rowIndex={rowIndex} rowData={rowData} />;
+    case 'log':
+      return <LogLane rowIndex={rowIndex} rowData={rowData} />;
+    case 'animal':
+      return <AnimalLane rowIndex={rowIndex} rowData={rowData} />;
     case 'grass':
       return <Grass rowIndex={rowIndex} />;
     default:
@@ -57,34 +57,35 @@ export function Forest({ rowIndex, rowData }) {
   );
 }
 
-export function CarLane({ rowIndex, rowData }) {
+export function LogLane({ rowIndex, rowData }) {
   return (
     <Road rowIndex={rowIndex}>
-      {rowData.vehicles.map((vehicle, index) => (
-        <Car
+      {rowData.logs.map((log, index) => (
+        <Log
           key={index}
           rowIndex={rowIndex}
-          initialTileIndex={vehicle.initialTileIndex}
+          logIndex={log.index}
           direction={rowData.direction}
           speed={rowData.speed}
-          color={vehicle.color}
+          total={rowData.logs.length}
         />
       ))}
     </Road>
   );
 }
 
-export function TruckLane({ rowIndex, rowData }) {
+export function AnimalLane({ rowIndex, rowData }) {
   return (
     <Road rowIndex={rowIndex}>
-      {rowData.vehicles.map((vehicle, index) => (
-        <Truck
+      {rowData.animals.map((animal, index) => (
+        <Animal
           key={index}
           rowIndex={rowIndex}
-          color={vehicle.color}
-          initialTileIndex={vehicle.initialTileIndex}
+          animalIndex={animal.index}
           direction={rowData.direction}
           speed={rowData.speed}
+          species={animal.species}
+          total={rowData.animals.length}
         />
       ))}
     </Road>
@@ -165,61 +166,63 @@ export function Tree({ tileIndex, height }) {
   );
 }
 
-export function Car({ rowIndex, initialTileIndex, direction, speed, color }) {
-  const car = useRef(null);
-  useVehicleAnimation(car, direction, speed);
-  useHitDetection(car, rowIndex);
+export function Log({ rowIndex, logIndex, direction, speed, total }) {
+  const logRef = useRef(null);
+  const rotationRef = useRef(0);
+  const wrapLength = (maxTileIndex - minTileIndex + 4) * tileSize; // +4 for 2-tile buffer each side
+  const beginningOfRow = (minTileIndex - 2) * tileSize;
+  const endOfRow = (maxTileIndex + 2) * tileSize;
+  // Evenly space logs along the wrap path
+  const offset = (logIndex / total) * wrapLength;
+  useVehicleAnimation(logRef, direction, speed, offset, wrapLength, beginningOfRow, endOfRow);
+  useHitDetection(logRef, rowIndex);
+  const logRadius = tileSize * 0.32;
+  const logLength = tileSize * 0.92;
+  const logZ = logRadius;
+  useFrame((_, delta) => {
+    if (!logRef.current) return;
+    const rotSpeed = (speed / (tileSize * Math.PI)) * delta;
+    rotationRef.current += direction ? rotSpeed : -rotSpeed;
+    logRef.current.rotation.y = rotationRef.current;
+  });
   return (
-    <group
-      position-x={initialTileIndex * tileSize}
-      rotation-z={direction ? 0 : Math.PI}
-      ref={car}
-    >
-      <mesh position={[0, 0, 12]} castShadow receiveShadow>
-        <boxGeometry args={[60, 30, 15]} />
-        <meshLambertMaterial color={color} flatShading />
+    <group ref={logRef} position={[0, 0, logZ]}>
+      <mesh position={[0, 0, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[logRadius, logRadius, logLength, 16]} />
+        <meshLambertMaterial color={0x9c6615} flatShading />
       </mesh>
-      <mesh position={[-6, 0, 25.5]} castShadow receiveShadow>
-        <boxGeometry args={[33, 24, 12]} />
-        <meshLambertMaterial color={0xffffff} flatShading />
-      </mesh>
-      <Wheel x={-18} />
-      <Wheel x={18} />
     </group>
   );
 }
 
-export function Truck({ rowIndex, initialTileIndex, direction, speed, color }) {
-  const truck = useRef(null);
-  useVehicleAnimation(truck, direction, speed);
-  useHitDetection(truck, rowIndex);
+export function Animal({ rowIndex, animalIndex, direction, speed, species, total }) {
+  const animalRef = useRef(null);
+  const rotationRef = useRef(0);
+  const wrapLength = (maxTileIndex - minTileIndex + 4) * tileSize;
+  const beginningOfRow = (minTileIndex - 2) * tileSize;
+  const endOfRow = (maxTileIndex + 2) * tileSize;
+  const offset = (animalIndex / total) * wrapLength;
+  useVehicleAnimation(animalRef, direction, speed, offset, wrapLength, beginningOfRow, endOfRow);
+  useHitDetection(animalRef, rowIndex);
+  let color = 0x2196f3; // boar: blue
+  let size = tileSize * 0.36;
+  let animalZ = size;
+  if (species === 'deer') { color = 0xf44336; size = tileSize * 0.44; animalZ = size; }
+  if (species === 'bear') { color = 0xff9800; size = tileSize * 0.48; animalZ = size; }
+  if (species === 'fox') { color = 0x9c27b0; size = tileSize * 0.36; animalZ = size; }
+  useFrame((_, delta) => {
+    if (!animalRef.current) return;
+    const rotSpeed = (speed / (tileSize * Math.PI)) * delta;
+    rotationRef.current += direction ? rotSpeed : -rotSpeed;
+    animalRef.current.rotation.y = rotationRef.current;
+  });
   return (
-    <group
-      position-x={initialTileIndex * tileSize}
-      rotation-z={direction ? 0 : Math.PI}
-      ref={truck}
-    >
-      <mesh position={[-15, 0, 25]} castShadow receiveShadow>
-        <boxGeometry args={[70, 35, 35]} />
-        <meshLambertMaterial color={0xb4c6fc} flatShading />
-      </mesh>
-      <mesh position={[35, 0, 20]} castShadow receiveShadow>
-        <boxGeometry args={[30, 30, 30]} />
+    <group ref={animalRef} position={[0, 0, animalZ]}>
+      <mesh position={[0, 0, 0]} castShadow receiveShadow>
+        <sphereGeometry args={[size, 16, 16]} />
         <meshLambertMaterial color={color} flatShading />
       </mesh>
-      <Wheel x={-35} />
-      <Wheel x={5} />
-      <Wheel x={37} />
     </group>
-  );
-}
-
-export function Wheel({ x }) {
-  return (
-    <mesh position={[x, 0, 6]}>
-      <boxGeometry args={[12, 33, 12]} />
-      <meshLambertMaterial color={0x333333} flatShading />
-    </mesh>
   );
 }
 

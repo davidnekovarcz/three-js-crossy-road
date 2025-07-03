@@ -46,13 +46,16 @@ export function stepCompleted() {
   if (rows[rowIdx] && rows[rowIdx].type === 'forest' && rows[rowIdx].corn) {
     const cornIdx = rows[rowIdx].corn.indexOf(tileIdx);
     if (cornIdx !== -1) {
-      // Mark corn as collected with timestamp
-      if (!rows[rowIdx].collectedCorn) rows[rowIdx].collectedCorn = [];
-      rows[rowIdx].collectedCorn.push({ tileIndex: tileIdx, start: performance.now() });
-      rows[rowIdx].corn.splice(cornIdx, 1);
       useMapStore.setState(state => {
         const newRows = state.rows.slice();
-        newRows[rowIdx] = { ...rows[rowIdx] };
+        const row = { ...newRows[rowIdx] };
+        // Copy arrays before mutating
+        row.corn = row.corn.slice();
+        row.collectedCorn = row.collectedCorn ? row.collectedCorn.slice() : [];
+        // Mutate the copies
+        row.collectedCorn.push({ tileIndex: tileIdx, start: performance.now() });
+        row.corn.splice(cornIdx, 1);
+        newRows[rowIdx] = row;
         return { rows: newRows };
       });
       playCornSound();
