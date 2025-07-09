@@ -1,5 +1,18 @@
-export function playCornSound() {
-  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+import { getAudioContext } from './playGameOverSound';
+
+let lastPlay = 0;
+const DEBOUNCE_MS = 100;
+
+export async function playCornSound() {
+  const now = performance.now();
+  if (now - lastPlay < DEBOUNCE_MS) return;
+  lastPlay = now;
+
+  const ctx = getAudioContext();
+  if (ctx.state === 'suspended') {
+    try { await ctx.resume(); } catch (e) { /* ignore */ }
+  }
+
   const duration = 0.22; // seconds
   const oscillator = ctx.createOscillator();
   const gain = ctx.createGain();
@@ -15,5 +28,8 @@ export function playCornSound() {
   oscillator.start();
   oscillator.stop(ctx.currentTime + duration);
 
-  oscillator.onended = () => ctx.close();
+  oscillator.onended = () => {
+    oscillator.disconnect();
+    gain.disconnect();
+  };
 } 
