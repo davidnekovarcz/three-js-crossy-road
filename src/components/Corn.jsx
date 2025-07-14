@@ -1,12 +1,16 @@
 import React, { useRef, useState } from 'react';
 import { tileSize } from '@/utils/constants';
 import { useFrame } from '@react-three/fiber';
+import { playerState } from '@/logic/playerLogic';
+import { visibleTilesDistance } from '@/utils/constants';
 
 export default function Corn({ tileIndex, collected = false, start, rowIndex }) {
   const ref = useRef();
   const [done, setDone] = useState(false);
   const doneRef = useRef(false);
+  const isVisible = typeof rowIndex === 'number' ? Math.abs(rowIndex - playerState.currentRow) <= visibleTilesDistance : true;
   useFrame(() => {
+    if (!isVisible) return;
     if (!collected || !ref.current || doneRef.current) return;
     const duration = 0.6;
     const elapsed = (performance.now() - start) / 1000;

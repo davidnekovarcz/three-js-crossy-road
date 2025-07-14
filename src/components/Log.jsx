@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
 import { useVehicleAnimation } from '@/animation/useVehicleAnimation';
 import { useHitDetection } from '@/logic/collisionEffects';
-import { tileSize, minTileIndex, maxTileIndex } from '@/utils/constants';
+import { tileSize, minTileIndex, maxTileIndex, visibleTilesDistance } from '@/utils/constants';
+import { playerState } from '@/logic/playerLogic';
 import { useFrame } from '@react-three/fiber';
 
 export default function Log({ rowIndex, logIndex, direction, speed, total }) {
@@ -17,7 +18,9 @@ export default function Log({ rowIndex, logIndex, direction, speed, total }) {
   const logRadius = tileSize * 0.32;
   const logLength = tileSize * 0.92;
   const logZ = logRadius;
+  const isVisible = Math.abs(rowIndex - playerState.currentRow) <= visibleTilesDistance;
   useFrame((_, delta) => {
+    if (!isVisible) return;
     if (!logRef.current) return;
     const rotSpeed = (speed / (tileSize * Math.PI)) * delta;
     rotationRef.current += direction ? rotSpeed : -rotSpeed;

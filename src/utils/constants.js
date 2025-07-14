@@ -48,3 +48,5 @@ export const PLAYER_CONFIG = {
   RESPAWN_DURATION: 1200,
   ROWS_AHEAD_THRESHOLD: 10 // When to generate new rows
 };
+
+export const visibleTilesDistance = 10;

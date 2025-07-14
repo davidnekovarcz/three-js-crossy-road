@@ -14,9 +14,17 @@ import Log from './Log';
 import LogLane from './LogLane';
 import Road from './Road';
 import Tree from './Tree';
+import { playerState } from '@/logic/playerLogic';
+import { visibleTilesDistance } from '@/utils/constants';
 
 export default function Map() {
   const rows = useMapStore((state) => state.rows);
+  // Only render rows within [-visibleTilesDistance, +visibleTilesDistance] of the player's current row
+  const minVisible = Math.max(0, playerState.currentRow - visibleTilesDistance);
+  const maxVisible = Math.min(rows.length - 1, playerState.currentRow + visibleTilesDistance);
+  const visibleRows = rows
+    .slice(minVisible, maxVisible + 1)
+    .map((rowData, idx) => ({ rowData, index: minVisible + idx }));
   return (
     <>
       <Grass rowIndex={0} />
@@ -28,7 +36,7 @@ export default function Map() {
       <Grass rowIndex={-6} />
       <Grass rowIndex={-7} />
       <Grass rowIndex={-8} />
-      {rows.map((rowData, index) => (
+      {visibleRows.map(({ rowData, index }) => (
         <Row key={index} rowIndex={index + 1} rowData={rowData} />
       ))}
     </>

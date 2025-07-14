@@ -6,11 +6,9 @@ export const useMapStore = create((set) => ({
   rows: generateRows(INITIAL_ROWS),
   addRows: () => {
     const newRows = generateRows(NEW_ROWS_BATCH);
-    set((state) => {
-      // Only keep the last MAX_ROWS rows for performance
-      const rows = [...state.rows, ...newRows].slice(-MAX_ROWS);
-      return { rows };
-    });
+    set((state) => ({
+      rows: [...state.rows, ...newRows]
+    }));
   },
   reset: () => set({ rows: generateRows(INITIAL_ROWS) })
 }));
