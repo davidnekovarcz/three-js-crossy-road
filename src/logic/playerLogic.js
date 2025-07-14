@@ -1,6 +1,6 @@
 import { useGameStore } from '@/store/gameStore';
 import { useMapStore } from '@/store/mapStore';
-import { minTileIndex, maxTileIndex, tileSize } from '@/utils/constants';
+import { minTileIndex, maxTileIndex, tileSize, PLAYER_CONFIG } from '@/utils/constants';
 import { playCornSound } from '@/sound/playCornSound';
 
 export const playerState = {
@@ -12,7 +12,7 @@ export const playerState = {
   shakeStartTime: null,
   respawning: false,
   respawnStartTime: null,
-  respawnDuration: 1200
+  respawnDuration: PLAYER_CONFIG.RESPAWN_DURATION
 };
 
 export function queueMove(direction) {
@@ -64,7 +64,7 @@ export function stepCompleted() {
     }
   }
 
-  if (playerState.currentRow === mapStore.rows.length - 10) {
+  if (playerState.currentRow === mapStore.rows.length - PLAYER_CONFIG.ROWS_AHEAD_THRESHOLD) {
     mapStore.addRows();
   }
   gameStore.updateScore(playerState.currentRow);
@@ -82,7 +82,7 @@ export function resetPlayerStore() {
   playerState.shakeStartTime = null;
   playerState.respawning = false;
   playerState.respawnStartTime = null;
-  playerState.respawnDuration = 1200;
+  playerState.respawnDuration = PLAYER_CONFIG.RESPAWN_DURATION;
   if (!playerState.ref) return;
   playerState.ref.position.x = 0;
   playerState.ref.position.y = 0;

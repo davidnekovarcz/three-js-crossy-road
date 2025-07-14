@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { queueMove } from '@/logic/playerLogic';
+import { UI_CONFIG } from '@/utils/constants';
 
 export function Score() {
   const score = useGameStore((state) => state.score);
@@ -39,15 +40,16 @@ export function Result() {
 
 export function CornScore() {
   const cornCount = useGameStore((state) => state.cornCount);
-  // Show up to 20 corns, then show + if more
-  const maxCorns = 20;
+  const { MAX_CORN_DISPLAY, CORN_SCORE_STYLE } = UI_CONFIG;
+  
   let corns = '';
-  if (cornCount <= maxCorns) {
+  if (cornCount <= MAX_CORN_DISPLAY) {
     corns = '🌽'.repeat(cornCount);
   } else {
-    corns = '🌽'.repeat(maxCorns) + ` +${cornCount - maxCorns}`;
+    corns = '🌽'.repeat(MAX_CORN_DISPLAY) + ` +${cornCount - MAX_CORN_DISPLAY}`;
   }
-  return <div id="corn-score" style={{position: 'absolute', top: 20, right: 20, fontSize: '2em', color: 'gold', zIndex: 10, whiteSpace: 'nowrap'}}>{corns}</div>;
+  
+  return <div id="corn-score" style={CORN_SCORE_STYLE}>{corns}</div>;
 }
 
 export function useEventListeners() {

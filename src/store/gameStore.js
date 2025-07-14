@@ -1,14 +1,10 @@
 import { create } from 'zustand';
 import { resetPlayerStore } from '@/logic/playerLogic';
 import { useMapStore } from '@/store/mapStore';
+import { DEFAULT_GAME_STATE } from '@/utils/constants';
 
 export const useGameStore = create((set) => ({
-  status: 'running',
-  score: 0,
-  cornCount: 0,
-  checkpointRow: 0,
-  checkpointTile: 0,
-  isPaused: false,
+  ...DEFAULT_GAME_STATE,
   pause: () => set({ isPaused: true }),
   resume: () => set({ isPaused: false }),
   updateScore: (rowIndex) => {
@@ -22,6 +18,6 @@ export const useGameStore = create((set) => ({
   reset: () => {
     useMapStore.getState().reset();
     resetPlayerStore();
-    set({ status: 'running', score: 0, cornCount: 0, checkpointRow: 0, checkpointTile: 0 });
+    set(DEFAULT_GAME_STATE);
   }
-})); 
+}));
