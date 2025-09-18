@@ -13,8 +13,20 @@ export const INITIAL_ROWS = 20;
 export const MAX_ROWS = 40;
 export const NEW_ROWS_BATCH = 20;
 
+// Game state types
+export type GameStatus = 'running' | 'over' | 'paused';
+
+export interface GameState {
+  status: GameStatus;
+  score: number;
+  cornCount: number;
+  checkpointRow: number;
+  checkpointTile: number;
+  isPaused: boolean;
+}
+
 // Game state defaults
-export const DEFAULT_GAME_STATE = {
+export const DEFAULT_GAME_STATE: GameState = {
   status: 'running',
   score: 0,
   cornCount: 0,
@@ -24,13 +36,31 @@ export const DEFAULT_GAME_STATE = {
 };
 
 // Camera configuration
-export const CAMERA_CONFIG = {
+export interface CameraConfig {
+  up: [number, number, number];
+  position: [number, number, number];
+}
+
+export const CAMERA_CONFIG: CameraConfig = {
   up: [0, 0, 1],
   position: [300, -300, 300],
 };
 
 // UI configuration
-export const UI_CONFIG = {
+export interface UIConfig {
+  MAX_CORN_DISPLAY: number;
+  CORN_SCORE_STYLE: {
+    position: string;
+    top: number;
+    right: number;
+    fontSize: string;
+    color: string;
+    zIndex: number;
+    whiteSpace: string;
+  };
+}
+
+export const UI_CONFIG: UIConfig = {
   MAX_CORN_DISPLAY: 20,
   CORN_SCORE_STYLE: {
     position: 'absolute',
@@ -44,7 +74,12 @@ export const UI_CONFIG = {
 };
 
 // Player configuration
-export const PLAYER_CONFIG = {
+export interface PlayerConfig {
+  RESPAWN_DURATION: number;
+  ROWS_AHEAD_THRESHOLD: number;
+}
+
+export const PLAYER_CONFIG: PlayerConfig = {
   RESPAWN_DURATION: 1200,
   ROWS_AHEAD_THRESHOLD: 10, // When to generate new rows
 };

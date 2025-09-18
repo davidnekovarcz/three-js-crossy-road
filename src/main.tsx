@@ -3,4 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './style.css';
 import Game from './components/Game';
 
-createRoot(document.getElementById('root')).render(<Game />);
+const rootElement = document.getElementById('root');
+if (rootElement) {
+  createRoot(rootElement).render(<Game />);
+}

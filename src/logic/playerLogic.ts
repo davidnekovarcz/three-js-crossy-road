@@ -2,8 +2,28 @@ import { useGameStore } from '@/store/gameStore';
 import { useMapStore } from '@/store/mapStore';
 import { minTileIndex, maxTileIndex, PLAYER_CONFIG } from '@/utils/constants';
 import { playCornSound } from '@/sound/playCornSound';
+import * as THREE from 'three';
 
-export const playerState = {
+export type MoveDirection = 'forward' | 'backward' | 'left' | 'right';
+
+export interface PlayerPosition {
+  rowIndex: number;
+  tileIndex: number;
+}
+
+export interface PlayerState {
+  currentRow: number;
+  currentTile: number;
+  movesQueue: MoveDirection[];
+  ref: THREE.Group | null;
+  shake: boolean;
+  shakeStartTime: number | null;
+  respawning: boolean;
+  respawnStartTime: number | null;
+  respawnDuration: number;
+}
+
+export const playerState: PlayerState = {
   currentRow: 0,
   currentTile: 0,
   movesQueue: [],
@@ -15,7 +35,7 @@ export const playerState = {
   respawnDuration: PLAYER_CONFIG.RESPAWN_DURATION,
 };
 
-export function queueMove(direction) {
+export function queueMove(direction: MoveDirection): void {
   if (useGameStore.getState().status === 'over') {
     playerState.movesQueue = [];
     return;
@@ -30,7 +50,7 @@ export function queueMove(direction) {
   playerState.movesQueue.push(direction);
 }
 
-export function stepCompleted() {
+export function stepCompleted(): void {
   const direction = playerState.movesQueue.shift();
   if (direction === 'forward') playerState.currentRow += 1;
   if (direction === 'backward') playerState.currentRow -= 1;
@@ -78,11 +98,11 @@ export function stepCompleted() {
   gameStore.updateScore(playerState.currentRow);
 }
 
-export function setPlayerRef(ref) {
+export function setPlayerRef(ref: THREE.Group | null): void {
   playerState.ref = ref;
 }
 
-export function resetPlayerStore() {
+export function resetPlayerStore(): void {
   playerState.currentRow = 0;
   playerState.currentTile = 0;
   playerState.movesQueue = [];
@@ -97,7 +117,7 @@ export function resetPlayerStore() {
   playerState.ref.children[0].rotation.z = 0;
 }
 
-export function calculateFinalPosition(currentPosition, moves) {
+export function calculateFinalPosition(currentPosition: PlayerPosition, moves: MoveDirection[]): PlayerPosition {
   return moves.reduce((position, direction) => {
     if (direction === 'forward')
       return { rowIndex: position.rowIndex + 1, tileIndex: position.tileIndex };
@@ -111,7 +131,7 @@ export function calculateFinalPosition(currentPosition, moves) {
   }, currentPosition);
 }
 
-export function endsUpInValidPosition(currentPosition, moves) {
+export function endsUpInValidPosition(currentPosition: PlayerPosition, moves: MoveDirection[]): boolean {
   const finalPosition = calculateFinalPosition(currentPosition, moves);
   if (
     finalPosition.rowIndex === -1 ||
