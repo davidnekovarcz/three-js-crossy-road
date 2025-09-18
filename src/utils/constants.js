@@ -20,13 +20,13 @@ export const DEFAULT_GAME_STATE = {
   cornCount: 0,
   checkpointRow: 0,
   checkpointTile: 0,
-  isPaused: false
+  isPaused: false,
 };
 
 // Camera configuration
 export const CAMERA_CONFIG = {
   up: [0, 0, 1],
-  position: [300, -300, 300]
+  position: [300, -300, 300],
 };
 
 // UI configuration
@@ -39,14 +39,14 @@ export const UI_CONFIG = {
     fontSize: '2em',
     color: 'gold',
     zIndex: 10,
-    whiteSpace: 'nowrap'
-  }
+    whiteSpace: 'nowrap',
+  },
 };
 
 // Player configuration
 export const PLAYER_CONFIG = {
   RESPAWN_DURATION: 1200,
-  ROWS_AHEAD_THRESHOLD: 10 // When to generate new rows
+  ROWS_AHEAD_THRESHOLD: 10, // When to generate new rows
 };
 
 export const visibleTilesDistance = 10;

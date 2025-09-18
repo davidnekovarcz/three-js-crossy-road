@@ -1,6 +1,6 @@
 import { useGameStore } from '@/store/gameStore';
 import { useMapStore } from '@/store/mapStore';
-import { minTileIndex, maxTileIndex, tileSize, PLAYER_CONFIG } from '@/utils/constants';
+import { minTileIndex, maxTileIndex, PLAYER_CONFIG } from '@/utils/constants';
 import { playCornSound } from '@/sound/playCornSound';
 
 export const playerState = {
@@ -12,7 +12,7 @@ export const playerState = {
   shakeStartTime: null,
   respawning: false,
   respawnStartTime: null,
-  respawnDuration: PLAYER_CONFIG.RESPAWN_DURATION
+  respawnDuration: PLAYER_CONFIG.RESPAWN_DURATION,
 };
 
 export function queueMove(direction) {
@@ -53,18 +53,26 @@ export function stepCompleted() {
         row.corn = row.corn.slice();
         row.collectedCorn = row.collectedCorn ? row.collectedCorn.slice() : [];
         // Mutate the copies
-        row.collectedCorn.push({ tileIndex: tileIdx, start: performance.now() });
+        row.collectedCorn.push({
+          tileIndex: tileIdx,
+          start: performance.now(),
+        });
         row.corn.splice(cornIdx, 1);
         newRows[rowIdx] = row;
         return { rows: newRows };
       });
       playCornSound();
       useGameStore.getState().incrementCorn();
-      useGameStore.getState().setCheckpoint(playerState.currentRow, playerState.currentTile);
+      useGameStore
+        .getState()
+        .setCheckpoint(playerState.currentRow, playerState.currentTile);
     }
   }
 
-  if (playerState.currentRow === mapStore.rows.length - PLAYER_CONFIG.ROWS_AHEAD_THRESHOLD) {
+  if (
+    playerState.currentRow ===
+    mapStore.rows.length - PLAYER_CONFIG.ROWS_AHEAD_THRESHOLD
+  ) {
     mapStore.addRows();
   }
   gameStore.updateScore(playerState.currentRow);
@@ -116,9 +124,9 @@ export function endsUpInValidPosition(currentPosition, moves) {
   if (
     finalRow &&
     finalRow.type === 'forest' &&
-    finalRow.trees.some((tree) => tree.tileIndex === finalPosition.tileIndex)
+    finalRow.trees.some(tree => tree.tileIndex === finalPosition.tileIndex)
   ) {
     return false;
   }
   return true;
-} 
+}

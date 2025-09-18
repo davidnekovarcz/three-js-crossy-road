@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { minTileIndex, maxTileIndex, tileSize } from '@/utils/constants';
+import { minTileIndex, maxTileIndex } from '@/utils/constants';
 
 export function generateRows(amount) {
   const rows = [];
@@ -27,15 +27,6 @@ export function randomElement(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-function shuffled(array) {
-  // Fisher-Yates shuffle
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
-
 export function generateForesMetadata() {
   const occupiedTiles = new Set();
   const trees = Array.from({ length: 4 }, () => {
@@ -55,7 +46,10 @@ export function generateForesMetadata() {
   }
   // Place 0-2 corn per row
   const corn = [];
-  const cornCount = THREE.MathUtils.randInt(0, Math.min(2, possibleCornTiles.length));
+  const cornCount = THREE.MathUtils.randInt(
+    0,
+    Math.min(2, possibleCornTiles.length)
+  );
   for (let i = 0; i < cornCount; i++) {
     if (possibleCornTiles.length === 0) break;
     const idx = THREE.MathUtils.randInt(0, possibleCornTiles.length - 1);
@@ -81,4 +75,4 @@ export function generateAnimalLaneMetadata() {
     return { index: i, species };
   });
   return { type: 'animal', direction, speed, animals };
-} 
+}

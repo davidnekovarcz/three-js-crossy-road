@@ -1,12 +1,18 @@
 import { useFrame } from '@react-three/fiber';
 import { minTileIndex, maxTileIndex, tileSize } from '@/utils/constants';
 import { useGameStore } from '@/store/gameStore';
-import { playerState } from '@/logic/playerLogic';
-import { useRef } from 'react';
 
 // This hook is used for both logs and animals (and previously vehicles)
-export function useVehicleAnimation(ref, direction, speed, offset = 0, wrapLength, beginningOfRow, endOfRow) {
-  const isPaused = useGameStore((state) => state.isPaused);
+export function useVehicleAnimation(
+  ref,
+  direction,
+  speed,
+  offset = 0,
+  wrapLength,
+  beginningOfRow,
+  endOfRow
+) {
+  const isPaused = useGameStore(state => state.isPaused);
   useFrame((state, delta) => {
     if (!ref.current) return;
     if (isPaused) return;
@@ -41,4 +47,4 @@ export function useVehicleAnimation(ref, direction, speed, offset = 0, wrapLengt
       }
     }
   });
-} 
+}

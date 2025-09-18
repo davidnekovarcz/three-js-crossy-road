@@ -7,7 +7,7 @@ import { useRef } from 'react';
 
 export function usePlayerAnimation(ref) {
   const moveClock = useRef(new THREE.Clock(false));
-  const isPaused = useGameStore((state) => state.isPaused);
+  const isPaused = useGameStore(state => state.isPaused);
   // Track if we just finished respawning
   const justRespawned = useRef(false);
 
@@ -26,7 +26,10 @@ export function usePlayerAnimation(ref) {
       }
       return;
     }
-    if (window.useGameStore && window.useGameStore.getState().status === 'over') {
+    if (
+      window.useGameStore &&
+      window.useGameStore.getState().status === 'over'
+    ) {
       playerState.movesQueue = [];
       return;
     }
@@ -75,4 +78,4 @@ export function setRotation(player, progress) {
     endRotation,
     progress
   );
-} 
+}

@@ -7,12 +7,15 @@ import { useRef } from 'react';
 import { boundingBoxesIntersect, isRowNear } from '@/logic/collisionUtils';
 
 export function useHitDetection(vehicle, rowIndex) {
-  const endGame = useGameStore((state) => state.endGame);
-  const cornCount = useGameStore((state) => state.cornCount);
-  const checkpointRow = useGameStore((state) => state.checkpointRow);
-  const checkpointTile = useGameStore((state) => state.checkpointTile);
-  const status = useGameStore((state) => state.status);
-  const decrementCorn = () => useGameStore.setState((state) => ({ cornCount: Math.max(0, state.cornCount - 1) }));
+  const endGame = useGameStore(state => state.endGame);
+  const cornCount = useGameStore(state => state.cornCount);
+  const checkpointRow = useGameStore(state => state.checkpointRow);
+  const checkpointTile = useGameStore(state => state.checkpointTile);
+  const status = useGameStore(state => state.status);
+  const decrementCorn = () =>
+    useGameStore.setState(state => ({
+      cornCount: Math.max(0, state.cornCount - 1),
+    }));
 
   // Sound flags
   const collisionSoundPlayedRef = useRef(false);
@@ -48,8 +51,10 @@ export function useHitDetection(vehicle, rowIndex) {
           playerState.currentTile = checkpointTile;
           playerState.movesQueue = [];
           if (playerState.ref) {
-            playerState.ref.position.x = checkpointTile * (window.tileSize || 42);
-            playerState.ref.position.y = checkpointRow * (window.tileSize || 42);
+            playerState.ref.position.x =
+              checkpointTile * (window.tileSize || 42);
+            playerState.ref.position.y =
+              checkpointRow * (window.tileSize || 42);
             playerState.ref.position.z = 0;
             if (playerState.ref.children && playerState.ref.children[0]) {
               playerState.ref.children[0].scale.set(1, 1, 1);

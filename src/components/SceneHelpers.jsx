@@ -16,4 +16,4 @@ export function DirectionalLight({ ref }) {
       shadow-camera-far={400}
     />
   );
-} 
+}

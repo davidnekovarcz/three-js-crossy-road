@@ -32,4 +32,4 @@ export function playGameOverSound() {
     };
     currentTime += DURATIONS[i] * 0.95; // slight overlap for musicality
   }
-} 
+}

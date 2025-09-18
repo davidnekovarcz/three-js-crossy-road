@@ -24,4 +24,4 @@ export function playHorn() {
     };
     currentTime += DURATIONS[i] * 0.92;
   }
-} 
+}

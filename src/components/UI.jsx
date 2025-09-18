@@ -4,7 +4,7 @@ import { queueMove } from '@/logic/playerLogic';
 import { UI_CONFIG } from '@/utils/constants';
 
 export function Score() {
-  const score = useGameStore((state) => state.score);
+  const score = useGameStore(state => state.score);
   return <div id="score">{score}</div>;
 }
 
@@ -23,9 +23,9 @@ export function Controls() {
 }
 
 export function Result() {
-  const status = useGameStore((state) => state.status);
-  const score = useGameStore((state) => state.score);
-  const reset = useGameStore((state) => state.reset);
+  const status = useGameStore(state => state.status);
+  const score = useGameStore(state => state.score);
+  const reset = useGameStore(state => state.reset);
   if (status === 'running') return null;
   return (
     <div id="result-container">
@@ -39,22 +39,26 @@ export function Result() {
 }
 
 export function CornScore() {
-  const cornCount = useGameStore((state) => state.cornCount);
+  const cornCount = useGameStore(state => state.cornCount);
   const { MAX_CORN_DISPLAY, CORN_SCORE_STYLE } = UI_CONFIG;
-  
+
   let corns = '';
   if (cornCount <= MAX_CORN_DISPLAY) {
     corns = '🌽'.repeat(cornCount);
   } else {
     corns = '🌽'.repeat(MAX_CORN_DISPLAY) + ` +${cornCount - MAX_CORN_DISPLAY}`;
   }
-  
-  return <div id="corn-score" style={CORN_SCORE_STYLE}>{corns}</div>;
+
+  return (
+    <div id="corn-score" style={CORN_SCORE_STYLE}>
+      {corns}
+    </div>
+  );
 }
 
 export function useEventListeners() {
   useEffect(() => {
-    const handleKeyDown = (event) => {
+    const handleKeyDown = event => {
       if (event.key === 'ArrowUp') {
         event.preventDefault();
         queueMove('forward');
@@ -74,4 +78,4 @@ export function useEventListeners() {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
-} 
+}

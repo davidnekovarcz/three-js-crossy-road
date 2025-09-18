@@ -1,7 +1,12 @@
 import React, { useRef } from 'react';
 import { useVehicleAnimation } from '@/animation/useVehicleAnimation';
 import { useHitDetection } from '@/logic/collisionEffects';
-import { tileSize, minTileIndex, maxTileIndex, visibleTilesDistance } from '@/utils/constants';
+import {
+  tileSize,
+  minTileIndex,
+  maxTileIndex,
+  visibleTilesDistance,
+} from '@/utils/constants';
 import { playerState } from '@/logic/playerLogic';
 import { useFrame } from '@react-three/fiber';
 
@@ -13,12 +18,21 @@ export default function Log({ rowIndex, logIndex, direction, speed, total }) {
   const endOfRow = (maxTileIndex + 2) * tileSize;
   // Evenly space logs along the wrap path
   const offset = (logIndex / total) * wrapLength;
-  useVehicleAnimation(logRef, direction, speed, offset, wrapLength, beginningOfRow, endOfRow);
+  useVehicleAnimation(
+    logRef,
+    direction,
+    speed,
+    offset,
+    wrapLength,
+    beginningOfRow,
+    endOfRow
+  );
   useHitDetection(logRef, rowIndex);
   const logRadius = tileSize * 0.32;
   const logLength = tileSize * 0.92;
   const logZ = logRadius;
-  const isVisible = Math.abs(rowIndex - playerState.currentRow) <= visibleTilesDistance;
+  const isVisible =
+    Math.abs(rowIndex - playerState.currentRow) <= visibleTilesDistance;
   useFrame((_, delta) => {
     if (!isVisible) return;
     if (!logRef.current) return;

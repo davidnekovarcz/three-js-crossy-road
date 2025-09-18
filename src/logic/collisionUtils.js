@@ -9,9 +9,5 @@ export function boundingBoxesIntersect(objectA, objectB) {
 }
 
 export function isRowNear(rowA, rowB) {
-  return (
-    rowA === rowB ||
-    rowA === rowB + 1 ||
-    rowA === rowB - 1
-  );
+  return rowA === rowB || rowA === rowB + 1 || rowA === rowB - 1;
 }

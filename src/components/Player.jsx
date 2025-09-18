@@ -1,15 +1,14 @@
 import React, { useRef, useEffect } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
 import { Bounds } from '@react-three/drei';
-import { setPlayerRef, playerState, stepCompleted } from '@/logic/playerLogic';
+import { setPlayerRef, playerState } from '@/logic/playerLogic';
 import { usePlayerAnimation } from '@/animation/usePlayerAnimation';
 import { DirectionalLight } from '@/components/SceneHelpers';
-import * as THREE from 'three';
 
 export default function Player() {
   const player = useRef(null);
   const lightRef = useRef(null);
-  const camera = useThree((state) => state.camera);
+  const camera = useThree(state => state.camera);
 
   usePlayerAnimation(player);
 
@@ -70,7 +69,7 @@ export function ChickenBody() {
       const opacity = t;
       const grow = 0.1 + 0.9 * t; // scale from 0.1 to 1
       // Set opacity and scale for all meshes in the group
-      player.traverse((obj) => {
+      player.traverse(obj => {
         if (obj.material) {
           obj.material.transparent = true;
           obj.material.opacity = opacity;
@@ -83,7 +82,7 @@ export function ChickenBody() {
       }
     } else {
       // Ensure fully visible and normal scale if not respawning
-      player.traverse((obj) => {
+      player.traverse(obj => {
         if (obj.material) {
           obj.material.transparent = false;
           obj.material.opacity = 1;
@@ -105,7 +104,12 @@ export function ChickenBody() {
         <meshLambertMaterial color={0xffffff} flatShading />
       </mesh>
       {/* Beak */}
-      <mesh position={[0, 5.5, 25.5]} rotation-x={Math.PI / 2} castShadow receiveShadow>
+      <mesh
+        position={[0, 5.5, 25.5]}
+        rotation-x={Math.PI / 2}
+        castShadow
+        receiveShadow
+      >
         <coneGeometry args={[1.2, 2.5, 12]} />
         <meshLambertMaterial color={0xffc300} flatShading />
       </mesh>
@@ -143,15 +147,25 @@ export function ChickenBody() {
         <meshLambertMaterial color={0xffffff} flatShading />
       </mesh>
       {/* Left Foot */}
-      <mesh position={[-1.2, 0, 7]} rotation-x={Math.PI / 2} castShadow receiveShadow>
+      <mesh
+        position={[-1.2, 0, 7]}
+        rotation-x={Math.PI / 2}
+        castShadow
+        receiveShadow
+      >
         <cylinderGeometry args={[0.8, 0.8, 8, 12]} />
         <meshLambertMaterial color={0xffa500} flatShading />
       </mesh>
       {/* Right Foot */}
-      <mesh position={[1.2, 0, 7]} rotation-x={Math.PI / 2} castShadow receiveShadow>
+      <mesh
+        position={[1.2, 0, 7]}
+        rotation-x={Math.PI / 2}
+        castShadow
+        receiveShadow
+      >
         <cylinderGeometry args={[0.8, 0.8, 8, 12]} />
         <meshLambertMaterial color={0xffa500} flatShading />
       </mesh>
     </group>
   );
-} 
+}

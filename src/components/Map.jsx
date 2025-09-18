@@ -1,27 +1,21 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { useMapStore } from '@/store/mapStore';
-import { useVehicleAnimation } from '@/animation/useVehicleAnimation';
-import { useHitDetection } from '@/logic/collisionEffects';
-import { tilesPerRow, tileSize, minTileIndex, maxTileIndex } from '@/utils/constants';
-import { useFrame } from '@react-three/fiber';
-import { useGameStore } from '@/store/gameStore';
-import Ball from './Ball';
 import BallLane from './BallLane';
 import Corn from './Corn';
 import Grass from './Grass';
-import GridLines from './GridLines';
-import Log from './Log';
 import LogLane from './LogLane';
-import Road from './Road';
 import Tree from './Tree';
 import { playerState } from '@/logic/playerLogic';
 import { visibleTilesDistance } from '@/utils/constants';
 
 export default function Map() {
-  const rows = useMapStore((state) => state.rows);
+  const rows = useMapStore(state => state.rows);
   // Only render rows within [-visibleTilesDistance, +visibleTilesDistance] of the player's current row
   const minVisible = Math.max(0, playerState.currentRow - visibleTilesDistance);
-  const maxVisible = Math.min(rows.length - 1, playerState.currentRow + visibleTilesDistance);
+  const maxVisible = Math.min(
+    rows.length - 1,
+    playerState.currentRow + visibleTilesDistance
+  );
   const visibleRows = rows
     .slice(minVisible, maxVisible + 1)
     .map((rowData, idx) => ({ rowData, index: minVisible + idx }));
@@ -64,12 +58,20 @@ export function Forest({ rowIndex, rowData }) {
       {rowData.trees.map((tree, index) => (
         <Tree key={index} tileIndex={tree.tileIndex} height={tree.height} />
       ))}
-      {rowData.corn && rowData.corn.map((tileIndex, idx) => (
-        <Corn key={"corn-"+tileIndex} tileIndex={tileIndex} />
-      ))}
-      {rowData.collectedCorn && rowData.collectedCorn.map((c, idx) => (
-        <Corn key={"collected-"+c.tileIndex+"-"+c.start} tileIndex={c.tileIndex} collected start={c.start} rowIndex={rowIndex} />
-      ))}
+      {rowData.corn &&
+        rowData.corn.map(tileIndex => (
+          <Corn key={'corn-' + tileIndex} tileIndex={tileIndex} />
+        ))}
+      {rowData.collectedCorn &&
+        rowData.collectedCorn.map(c => (
+          <Corn
+            key={'collected-' + c.tileIndex + '-' + c.start}
+            tileIndex={c.tileIndex}
+            collected
+            start={c.start}
+            rowIndex={rowIndex}
+          />
+        ))}
     </Grass>
   );
-} 
+}

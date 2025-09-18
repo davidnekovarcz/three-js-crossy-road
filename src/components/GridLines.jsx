@@ -1,8 +1,13 @@
 import React from 'react';
-import { tilesPerRow, tileSize, minTileIndex, maxTileIndex } from '@/utils/constants';
+import {
+  tilesPerRow,
+  tileSize,
+  minTileIndex,
+  maxTileIndex,
+} from '@/utils/constants';
 
-export default function GridLines({ variant = "grass" }) {
-  const opacity = variant === "road" ? 0.06 : 0.18;
+export default function GridLines({ variant = 'grass' }) {
+  const opacity = variant === 'road' ? 0.06 : 0.18;
   const lines = [];
   for (let i = minTileIndex; i <= maxTileIndex + 1; i++) {
     lines.push(

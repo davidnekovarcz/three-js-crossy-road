@@ -10,7 +10,11 @@ export async function playCornSound() {
 
   const ctx = getAudioContext();
   if (ctx.state === 'suspended') {
-    try { await ctx.resume(); } catch (e) { /* ignore */ }
+    try {
+      await ctx.resume();
+    } catch (e) {
+      /* ignore */
+    }
   }
 
   const duration = 0.22; // seconds
@@ -19,7 +23,10 @@ export async function playCornSound() {
 
   oscillator.type = 'sine';
   oscillator.frequency.setValueAtTime(660, ctx.currentTime); // E5
-  oscillator.frequency.linearRampToValueAtTime(1046, ctx.currentTime + duration); // up to C6
+  oscillator.frequency.linearRampToValueAtTime(
+    1046,
+    ctx.currentTime + duration
+  ); // up to C6
 
   gain.gain.setValueAtTime(0.18, ctx.currentTime);
   gain.gain.linearRampToValueAtTime(0, ctx.currentTime + duration);
@@ -32,4 +39,4 @@ export async function playCornSound() {
     oscillator.disconnect();
     gain.disconnect();
   };
-} 
+}

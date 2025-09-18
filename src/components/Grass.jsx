@@ -1,5 +1,5 @@
 import React from 'react';
-import { tilesPerRow, tileSize, minTileIndex, maxTileIndex } from '@/utils/constants';
+import { tilesPerRow, tileSize } from '@/utils/constants';
 import GridLines from './GridLines';
 
 export default function Grass({ rowIndex, children }) {
