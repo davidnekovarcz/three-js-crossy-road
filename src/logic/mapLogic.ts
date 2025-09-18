@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { minTileIndex, maxTileIndex } from '@/utils/constants';
+import { RowData, ForestRow, LogRow, AnimalRow, GrassRow, Tree } from '@/types';
 
-export function generateRows(amount) {
+export function generateRows(amount: number): RowData[] {
   const rows = [];
   for (let i = 0; i < amount; i++) {
     if (i === 0) {
@@ -16,18 +17,18 @@ export function generateRows(amount) {
   return rows;
 }
 
-export function generateRow() {
+export function generateRow(): RowData {
   const type = randomElement(['log', 'animal', 'forest']);
   if (type === 'log') return generateLogLaneMetadata();
   if (type === 'animal') return generateAnimalLaneMetadata();
   return generateForesMetadata();
 }
 
-export function randomElement(array) {
+export function randomElement<T>(array: T[]): T {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-export function generateForesMetadata() {
+export function generateForesMetadata(): ForestRow {
   const occupiedTiles = new Set();
   const trees = Array.from({ length: 4 }, () => {
     let tileIndex;
@@ -59,7 +60,7 @@ export function generateForesMetadata() {
   return { type: 'forest', trees, corn };
 }
 
-export function generateLogLaneMetadata() {
+export function generateLogLaneMetadata(): LogRow {
   const direction = randomElement([true, false]);
   const speed = randomElement([110, 140, 170]);
   // For logs, just store N logs; position will be calculated in animation
@@ -67,7 +68,7 @@ export function generateLogLaneMetadata() {
   return { type: 'log', direction, speed, logs };
 }
 
-export function generateAnimalLaneMetadata() {
+export function generateAnimalLaneMetadata(): AnimalRow {
   const direction = randomElement([true, false]);
   const speed = randomElement([120, 150, 180]);
   const animals = Array.from({ length: 2 }, (_, i) => {
