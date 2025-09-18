@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "start": "npx vite preview --port $PORT --host 0.0.0.0",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,6 +15,7 @@
   "dependencies": {
     "@react-three/drei": "^10.4.2",
     "@react-three/fiber": "^9.1.4",
+    "express": "^4.18.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "three": "^0.178.0",
