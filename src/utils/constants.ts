@@ -13,17 +13,7 @@ export const INITIAL_ROWS = 20;
 export const MAX_ROWS = 40;
 export const NEW_ROWS_BATCH = 20;
 
-// Game state types
-export type GameStatus = 'running' | 'over' | 'paused';
-
-export interface GameState {
-  status: GameStatus;
-  score: number;
-  cornCount: number;
-  checkpointRow: number;
-  checkpointTile: number;
-  isPaused: boolean;
-}
+import { GameState, GameStatus } from '@/types';
 
 // Game state defaults
 export const DEFAULT_GAME_STATE: GameState = {

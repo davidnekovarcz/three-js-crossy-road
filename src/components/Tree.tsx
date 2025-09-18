@@ -1,7 +1,8 @@
 import React from 'react';
 import { tileSize } from '@/utils/constants';
+import { TreeProps } from '@/types';
 
-export default function Tree({ tileIndex, height }) {
+export default function Tree({ tileIndex, height }: TreeProps) {
   const foliageOffsets = [0, 6];
   return (
     <group position-x={tileIndex * tileSize}>

@@ -7,6 +7,7 @@ import LogLane from './LogLane';
 import Tree from './Tree';
 import { playerState } from '@/logic/playerLogic';
 import { visibleTilesDistance } from '@/utils/constants';
+import { RowProps, ForestProps, RowData, ForestRow } from '@/types';
 
 export default function Map() {
   const rows = useMapStore(state => state.rows);
@@ -37,7 +38,7 @@ export default function Map() {
   );
 }
 
-export function Row({ rowIndex, rowData }) {
+export function Row({ rowIndex, rowData }: RowProps) {
   switch (rowData.type) {
     case 'forest':
       return <Forest rowIndex={rowIndex} rowData={rowData} />;
@@ -52,7 +53,7 @@ export function Row({ rowIndex, rowData }) {
   }
 }
 
-export function Forest({ rowIndex, rowData }) {
+export function Forest({ rowIndex, rowData }: ForestProps) {
   return (
     <Grass rowIndex={rowIndex}>
       {rowData.trees.map((tree, index) => (

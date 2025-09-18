@@ -1,8 +1,9 @@
 import React from 'react';
 import { tilesPerRow, tileSize } from '@/utils/constants';
 import GridLines from './GridLines';
+import { GrassProps } from '@/types';
 
-export default function Grass({ rowIndex, children }) {
+export default function Grass({ rowIndex, children }: GrassProps) {
   return (
     <group position-y={rowIndex * tileSize}>
       <mesh receiveShadow>

@@ -2,26 +2,7 @@ import { useGameStore } from '@/store/gameStore';
 import { useMapStore } from '@/store/mapStore';
 import { minTileIndex, maxTileIndex, PLAYER_CONFIG } from '@/utils/constants';
 import { playCornSound } from '@/sound/playCornSound';
-import * as THREE from 'three';
-
-export type MoveDirection = 'forward' | 'backward' | 'left' | 'right';
-
-export interface PlayerPosition {
-  rowIndex: number;
-  tileIndex: number;
-}
-
-export interface PlayerState {
-  currentRow: number;
-  currentTile: number;
-  movesQueue: MoveDirection[];
-  ref: THREE.Group | null;
-  shake: boolean;
-  shakeStartTime: number | null;
-  respawning: boolean;
-  respawnStartTime: number | null;
-  respawnDuration: number;
-}
+import { MoveDirection, PlayerPosition, PlayerState } from '@/types';
 
 export const playerState: PlayerState = {
   currentRow: 0,

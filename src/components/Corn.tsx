@@ -3,14 +3,16 @@ import { tileSize } from '@/utils/constants';
 import { useFrame } from '@react-three/fiber';
 import { playerState } from '@/logic/playerLogic';
 import { visibleTilesDistance } from '@/utils/constants';
+import { CornProps } from '@/types';
+import * as THREE from 'three';
 
 export default function Corn({
   tileIndex,
   collected = false,
   start,
   rowIndex,
-}) {
-  const ref = useRef();
+}: CornProps) {
+  const ref = useRef<THREE.Group>(null);
   const [done, setDone] = useState(false);
   const doneRef = useRef(false);
   const isVisible =
