@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "start": "vite preview --port $PORT --host 0.0.0.0",
+    "start": "npx vite preview --port $PORT --host 0.0.0.0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -18,7 +18,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "three": "^0.178.0",
-    "vite": "^7.0.0",
+    "vite": "5.4.0",
     "zustand": "^5.0.6"
   },
   "devDependencies": {
