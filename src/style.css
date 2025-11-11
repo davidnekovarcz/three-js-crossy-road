@@ -80,3 +80,90 @@ body {
     cursor: pointer;
   }
 }
+
+#name-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+#name-form label {
+  font-size: 0.8em;
+}
+
+#name-form input {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.8em;
+  padding: 10px;
+  border: 2px solid black;
+  text-align: center;
+  background-color: #f0f0f0;
+}
+
+#name-form input:focus {
+  outline: none;
+  border-color: red;
+  background-color: white;
+}
+
+#name-form button {
+  background-color: green;
+  padding: 15px 40px;
+}
+
+#name-form button:hover {
+  background-color: darkgreen;
+}
+
+.player-name {
+  font-size: 0.9em;
+  color: #333;
+  margin: 0;
+}
+
+#sign-in-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 2px solid #ddd;
+}
+
+#sign-in-prompt {
+  font-size: 0.8em;
+  color: #666;
+  margin: 0;
+  font-style: italic;
+}
+
+#sign-in-button {
+  background: linear-gradient(135deg, #4285F4, #34A853);
+  color: white;
+  padding: 15px 40px;
+  border: none;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.8em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 3px 5px 0px 0px rgba(0, 0, 0, 0.75);
+}
+
+#sign-in-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #357ae8, #2d9047);
+  transform: scale(1.05);
+}
+
+#sign-in-button:active:not(:disabled) {
+  transform: scale(0.95);
+  box-shadow: 1px 2px 0px 0px rgba(0, 0, 0, 0.75);
+}
+
+#sign-in-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

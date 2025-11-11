@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { resetPlayerStore } from '@/logic/playerLogic';
 import { useMapStore } from '@/store/mapStore';
+import { useUserStore } from '@/store/userStore';
+import { useLeaderboardStore } from '@/store/leaderboardStore';
 import { DEFAULT_GAME_STATE } from '@/utils/constants';
 import { GameStore } from '@/types';
 import { trackGamePlayed, trackMaxLevel } from '@/utils/analytics';
@@ -112,6 +114,18 @@ export const useGameStore = create<GameStore>((set, get) => ({
         cornCollected: state.cornCount,
         totalCornCollected: state.totalCornCollected
       }, '*');
+    }
+
+    const userData = useUserStore.getState().userData;
+    if (userData && state.score > 0) {
+      const leaderboardStore = useLeaderboardStore.getState();
+      leaderboardStore.addEntry({
+          id: userData.id,
+          name: userData.name,
+          score: state.score,
+        }).catch(error => {
+          console.error('Failed to save score to leaderboard:', error);
+        });
     }
   },
   reset: () => {
