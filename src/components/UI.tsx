@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUserStore } from '@/store/userStore';
-import { useLeaderboardStore } from '@/store/leaderboardStore';
+import { useLeaderboardStore } from '@/leaderboard';
 import { queueMove } from '@/logic/playerLogic';
 import { UI_CONFIG } from '@/utils/constants';
 import { signInWithGooglePopup, isUserLoggedIn } from '@/config/firebase';

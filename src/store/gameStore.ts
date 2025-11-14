@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { resetPlayerStore } from '@/logic/playerLogic';
 import { useMapStore } from '@/store/mapStore';
 import { useUserStore } from '@/store/userStore';
-import { useLeaderboardStore } from '@/store/leaderboardStore';
+import { useLeaderboardStore } from '@/leaderboard';
 import { DEFAULT_GAME_STATE } from '@/utils/constants';
 import { GameStore } from '@/types';
 import { trackGamePlayed, trackMaxLevel } from '@/utils/analytics';
