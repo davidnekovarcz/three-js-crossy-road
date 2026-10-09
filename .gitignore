@@ -22,4 +22,8 @@ Thumbs.db
 .vite/
 
 # Misc
-*.local 
+*.local
+
+# Kaloko run output
+tmp/kaloko/
+.kaloko/
