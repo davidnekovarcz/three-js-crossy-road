@@ -24,7 +24,9 @@
     "format": "prettier --write src/**/*.{ts,tsx,js,jsx,json,css,md}",
     "format:check": "prettier --check src/**/*.{ts,tsx,js,jsx,json,css,md}",
     "type-check": "tsc --noEmit",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"No unit tests; the Kaloko score smoke runs on pre-push.\"",
+    "kaloko:doctor": "kaloko doctor",
+    "kaloko:smoke": "sh scripts/kaloko-smoke.sh"
   },
   "dependencies": {
     "@react-three/drei": "^10.4.2",
@@ -47,6 +49,7 @@
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
+    "kaloko": "^0.16.1",
     "prettier": "^3.0.0",
     "typescript": "^5.1.0"
   },
